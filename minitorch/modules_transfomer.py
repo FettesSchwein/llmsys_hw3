@@ -270,12 +270,12 @@ class TransformerLayer(Module):
         batch_size, seq_len, n_embd = x.shape
         ### BEGIN ASSIGN3_3
         # 1. Layer Norm -> Attention -> Residual Connection (PRE-LN)
-        x_norm = self.ln_1(x.contiguous().view(batch_size * seq_len, n_embd))
-        x = x + self.attention(x_norm.contiguous().view(batch_size, seq_len, n_embd))
+        x_norm = self.ln_1(x.view(batch_size * seq_len, n_embd)).view(batch_size, seq_len, n_embd)
+        x = x + self.attention(x_norm)
         
         # 2. Layer Norm -> FeedForward -> Residual Connection (PRE-LN)
-        x_norm = self.ln_2(x.contiguous().view(batch_size * seq_len, n_embd))
-        x = x + self.ff(x_norm.contiguous().view(batch_size, seq_len, n_embd))
+        x_norm = self.ln_2(x.view(batch_size * seq_len, n_embd)).view(batch_size, seq_len, n_embd)
+        x = x + self.ff(x_norm)
         return x
         ### END ASSIGN3_3
 
